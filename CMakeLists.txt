@@ -3,4 +3,6 @@ project(BMSTU)
 
 set(CMAKE_CXX_STANDARD 26)
 
-add_executable(untitled3 main.cpp poiu.cpp)
+add_executable(
+        lab1.1.cpp
+        lab1.2.cpp)

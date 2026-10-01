@@ -1,4 +1,4 @@
-/*#include <iostream>
+#include <iostream>
 #include <cmath>
 
 using namespace std;
@@ -28,7 +28,7 @@ void calc(double x, double eps) {
     double x_sq = x * x;
     double pi_sq = pi * pi;
 
-    for (;;) {
+    while (true) {
         double t = x_sq / (n * n * pi_sq);
 
         // проверка точности
@@ -44,4 +44,4 @@ void calc(double x, double eps) {
     cout << "Tochnost: " << eps
          << "| sin(x) = " << pr
          << "| Iteracia: " << iterations << endl;
-}*/
+}
