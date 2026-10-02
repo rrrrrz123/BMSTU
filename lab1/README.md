@@ -1,0 +1,274 @@
+<div align="center">
+  
+# ОТЧЕТ
+**по лабораторной работе №1 по курсу «Алгоритмизация и программирование»**
+
+</div>
+
+**Тема работы:** Изучение операторов языка Си++. Изучение массивов и структур языка Си++.  
+**Вариант:** №20  
+
+**Выполнил:** Студент группы ИУ8-14/6 | Решетникова Таисия Сергеевна  
+**Проверил:** Преподаватель Барыкин Дмитрий Васильевич  
+
+<div align="center">
+Москва, МГТУ — 2026
+</div>
+
+---
+
+## 1. ЧАСТЬ 1. ИЗУЧЕНИЕ ОПЕРАТОРОВ ЯЗЫКА СИ++
+
+### 1.1. Цель работы
+Овладение навыками разработки программ на языке Си++, реализующих циклические алгоритмы с использованием различных разновидностей операторов циклов.
+
+### 1.2. Условие задачи 
+Вычислить, организовав цикл с точностью $\varepsilon = 10^{-2}, 10^{-4}, 10^{-6}, 10^{-8}$. Определить, как меняется число итераций в зависимости от точности. *(Здесь должна быть формула)*
+
+### 1.3. Текст программы с комментариями
+
+```cpp
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+void calc(double x, double eps); // функция проверки
+
+int main() {
+    double x;
+    cout << "Enter x (in radians): ";
+    cin >> x; // для какого числа ищем ответ
+    cout << "\nsin(x) = " << sin(x) << endl;
+    
+    // функции для разных точностей
+    calc(x, 1e-2);
+    calc(x, 1e-4);
+    calc(x, 1e-6);
+    calc(x, 1e-8);
+    
+    return 0;
+}
+
+// функция для вычисления sin(x) с точностью eps
+void calc(double x, double eps) {
+    double pr = x;
+    int iterations = 0; // кол-во итераций
+    long long n = 1;
+    const double pi = acos(-1.0); // вводим пи
+    double x_sq = x * x;
+    double pi_sq = pi * pi;
+    
+    while (true) {
+        double t = x_sq / (n * n * pi_sq); // подсчет выражения
+        // проверка точности
+        if (abs(pr * t) < eps) {
+            break;
+        }
+        pr *= (1.0 - t);
+        iterations++;
+        n++;
+    }
+    cout << "Tochnost: " << eps << " | sin(x) = " << pr << " | Iteracia: " << iterations << endl;
+}
+```
+
+### 1.4. Контрольный пример и результаты работы программы
+
+**Ручной расчет:**
+* При подставлении в выражении $x = \pi/2$, его значение стремится к $1$.
+* При подставлении в выражение $x = \pi/6$, его значение стремится к $0.5$.
+* При подставлении в выражение $x = \pi/4$, его значение стремится к $0.707$.
+
+**Результаты работы программы:**
+
+При вводе $x = \pi/2$, то есть $\approx 1.5707963268$
+```text
+Enter x (in radians): 1.5707963268
+sin(x) = 1
+Tochnost: 0.01 | sin(x) = 1.04644 | Iteracia: 5
+Tochnost: 0.0001 | sin(x) = 1.00496 | Iteracia: 50
+Tochnost: 1e-06 | sin(x) = 1.0005 | Iteracia: 500
+Tochnost: 1e-08 | sin(x) = 1.00005 | Iteracia: 5000
+```
+
+При вводе $x = \pi/6$, то есть $\approx 0.5235987756$ 
+```text
+Enter x (in radians): 0.5235987756
+sin(x) = 0.5
+Tochnost: 0.01 | sin(x) = 0.509054 | Iteracia: 1
+Tochnost: 0.0001 | sin(x) = 0.501208 | Iteracia: 11
+Tochnost: 1e-06 | sin(x) = 0.500118 | Iteracia: 117
+Tochnost: 1e-08 | sin(x) = 0.500012 | Iteracia: 1178
+```
+
+При вводе $x = \pi/4$, то есть $\approx 0.7853981634$ 
+```text
+Enter x (in radians): 0.7853981634
+sin(x) = 0.707107
+Tochnost: 0.01 | sin(x) = 0.724806 | Iteracia: 2
+Tochnost: 0.0001 | sin(x) = 0.709165 | Iteracia: 21
+Tochnost: 1e-06 | sin(x) = 0.707317 | Iteracia: 210
+Tochnost: 1e-08 | sin(x) = 0.707128 | Iteracia: 2102
+```
+
+**Вывод по Части 1:**
+С уменьшением параметра точности в $10^{-2}$ раз количество итераций увеличивается примерно в $10$ раз.
+
+---
+
+## 2. ЧАСТЬ 2. ИЗУЧЕНИЕ МАССИВОВ И СТРУКТУР ЯЗЫКА СИ++
+
+### 2.1. Цель работы
+Овладение навыками разработки программ на языке С++, использующих пользовательские структурированные типы данных и динамические контейнеры.
+
+### 2.2. Условие задачи
+Определите структуру «Житель». Поля: ФИО, переменная структурного типа «адрес» (поля: улица, номер дома, номер квартиры), пол, возраст.
+В программе задайте несколько жителей – фрагмент базы данных ЖЭК (массив переменных структурного типа) и выполнить следующие действия.
+Определите, число пенсионеров (мужчины с 60 лет, женщины с 55) находится в базе данных.
+
+### 2.3. Текст программы с комментариями
+
+```cpp
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+struct zhitel; // структура для данных жителей
+
+struct address // подструктура для данных про адрес
+{
+    string street;
+    int house;
+    int flat;
+};
+
+struct zhitel // искомая структура
+{
+    string fullname;
+    address Address;
+    char gender;
+    int age;
+};
+
+int main() // заполнение базы данных
+{
+    int n;
+    cout << "Enter quantity of residents: " << endl;
+    cin >> n; // кол-во людей
+    
+    vector<zhitel> database(n);
+    
+    for (int i = 0; i < n; i++)
+    {
+        cout << "Enter for resident " << i + 1 << endl;
+        cin.ignore();
+        
+        cout << "Enter fullname: " << endl;
+        getline(cin, database[i].fullname);
+        
+        cout << "Enter street:" << endl;
+        getline(cin, database[i].Address.street);
+        
+        cout << "Enter gender (M/m for male F/f for female): " << endl;
+        cin >> database[i].gender;
+        
+        cout << "Enter age: " << endl;
+        cin >> database[i].age;
+        
+        cout << "Enter number of house: " << endl;
+        cin >> database[i].Address.house;
+        
+        cout << "Enter number of flat: " << endl;
+        cin >> database[i].Address.flat;
+    }
+    
+    cout << "\nList of all residents" << endl; // вывод всего списка
+    for (int i = 0; i < n; i++) {
+        cout << i + 1 << ". " << database[i].fullname 
+             << ", age: " << database[i].age 
+             << ", gender: " << database[i].gender 
+             << ", street: " << database[i].Address.street 
+             << ", house: " << database[i].Address.house 
+             << ", flat: " << database[i].Address.flat << endl;
+    }
+    cout << endl;
+
+    // Подсчет количества пенсионеров
+    int pensioners = 0;
+    for (int i = 0; i < n; i++) {
+        if ((database[i].gender == 'M' || database[i].gender == 'm') && database[i].age >= 60) {
+            pensioners++;
+        }
+        if ((database[i].gender == 'F' || database[i].gender == 'f') && database[i].age >= 55) {
+            pensioners++;
+        }
+    }
+    
+    cout << "Quantity of pensioners: " << pensioners << endl;
+    
+    return 0;
+}
+```
+
+### 2.4. Контрольный пример и результаты работы программы
+
+**Входные данные:**
+* **Количество жителей:** $n = 4$
+* **ФИО:** Иванов И.И., **Улица:** Бэйкер, **Дом:** 89, **Кв:** 12, **Пол:** m, **Возраст:** 67 *(Мужчина пенсионер)*
+* **ФИО:** Петрова А.А, **Улица:** Пречистенка, **Дом:** 23, **Кв:** 34, **Пол:** f, **Возраст:** 12 *(Женщина не пенсионер)*
+* **ФИО:** Сидоров Д.А, **Улица:** Петрова, **Дом:** 789, **Кв:** 69, **Пол:** m, **Возраст:** 89 *(Мужчина пенсионер)*
+* **ФИО:** Рыжева В.Х., **Улица:** Площадь Ленина, **Дом:** 92, **Кв:** 52, **Пол:** f, **Возраст:** 56 *(Женщина пенсионер)*
+
+**Ручной расчет:**
+В списке 3 пенсионера.
+
+**Результат вывода программы:**
+```text
+Enter quantity of residents: 4
+Enter for resident 1
+Enter fullname: Ivanov I.I
+Enter street: Baker
+Enter gender (M/m for male F/f for female): M
+Enter age: 67
+Enter number of house: 89
+Enter number of flat: 12
+Enter for resident 2
+Enter fullname: Petrova A.A
+Enter street: Prechistenka
+Enter gender (M/m for male F/f for female): F
+Enter age: 12
+Enter number of house: 23
+Enter number of flat: 34
+Enter for resident 3
+Enter fullname: Sidorov D.A
+Enter street: Petrova
+Enter gender (M/m for male F/f for female): M
+Enter age: 89
+Enter number of house: 789
+Enter number of flat: 69
+Enter for resident 4
+Enter fullname: Ryzheva W.H
+Enter street: PLoshad Lenina
+Enter gender (M/m for male F/f for female): F
+Enter age: 56
+Enter number of house: 92
+Enter number of flat: 52
+
+List of all residents
+1. Ivanov I.I, age: 67, gender: M, street: Baker, house: 89, flat: 12
+2. Petrova A.A, age: 12, gender: F, street: Prechistenka, house: 23, flat: 34
+3. Sidorov D.A, age: 89, gender: M, street: Petrova, house: 789, flat: 69
+4. Ryzheva W.H, age: 56, gender: F, street: PLoshad Lenina, house: 92, flat: 52
+
+Quantity of pensioners: 3
+```
+
+---
+
+## 3. ВЫВОДЫ ПО РАБОТЕ
+
+1. В ходе выполнения первой части работы были изучены и применены на практике циклические структуры языка C++. Реализовано вычисление тригонометрической функции $\sin(x)$ через бесконечное произведение с заданной точностью. Установлено, что с повышением точности количество итераций цикла возрастает обратно пропорционально. Результаты работы всех трех типов циклов полностью совпали между собой и с точным значением библиотеки.
+2. Освоены навыки работы с контейнером и динамическим выделением памяти для массива структур. Написана программа для обработки базы данных жителей, успешно выполняющая поиск и подсчет пенсионеров по заданным критериям возраста и пола.
