@@ -1,4 +1,4 @@
-#include <iostream>
+/*#include <iostream>
 #include <string>
 #include <vector>
 struct zhitel;
@@ -64,4 +64,4 @@ int main()
     }
     cout <<"Quantity of pensioners: " << pensioners << endl;
     return 0;
-}
+}*/
