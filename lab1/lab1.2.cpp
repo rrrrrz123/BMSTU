@@ -1,4 +1,4 @@
-/*#include <iostream>
+#include <iostream>
 #include <string>
 #include <vector>
 struct zhitel;
@@ -16,7 +16,7 @@ struct zhitel
     char gender;
     int age;
 };
-int main()
+int main(int argc, char** argv)
 {
     int n;
     cout<<"Enter quantity of residents: "<<endl;
@@ -64,4 +64,4 @@ int main()
     }
     cout <<"Quantity of pensioners: " << pensioners << endl;
     return 0;
-}*/
+}

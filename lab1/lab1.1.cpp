@@ -1,10 +1,9 @@
-/*
 #include <iostream>
 #include <cmath>
 
 using namespace std;
 void calc(double x, double eps); // функция проверки
-int main() {
+int main(int argc, char** argv) {
     double x;
     cout << "Enter x (in radians): ";
     cin >> x;
@@ -46,4 +45,3 @@ void calc(double x, double eps) {
          << "| sin(x) = " << pr
          << "| Iteracia: " << iterations << endl;
 }
-*/
