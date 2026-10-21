@@ -1,0 +1,3 @@
+Result of v1 ^ arr:
+3
+0 0 1 
