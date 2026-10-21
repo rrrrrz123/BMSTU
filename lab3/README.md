@@ -1,24 +1,21 @@
+<div align="center">
+
+# ОТЧЕТ
+**по лабораторной работе №2 по курсу «Алгоритмизация и программирование»**
+
+</div>
+
+
+**Тема работы:** Изучение классов, перегрузки стандартных операций и наследования в языке C++.  
+**Вариант:** №20
+
+**Выполнил:** Студент группы ИУ8-14/6 | Решетникова Таисия Сергеевна  
+**Проверил:** Преподаватель Барыкин Дмитрий Васильевич
+
+<div align="center">
+Москва, МГТУ — 2026
+</div>
 ---
-title: |
-  ОТЧЕТ
-
-  **по л**[]{#_Toc432276134 .anchor}**абораторной работа №3 по курсу
-  «Алгоритмизация и программирование»**
-
-  Тема работы:
----
-
-**«Изучение классов, перегрузки стандартных операций и наследования в
-языке C++»**
-
-Вариант №20
-
-Выполнил: Студент группы [ИУ8-14/6 \| Решетникова Таисия
-Сергеевна]{.underline}
-
-Проверил: Преподаватель [Барыкин Дмитрий Васильевич]{.underline}
-
-Москва, МГТУ --- 2026
 
 ## 1. Часть 1. Классы и перегрузка операций в C++
 
@@ -67,203 +64,186 @@ title: |
 ### 1.3. Исходный код программы
 
 #### Файл Vector.h
+```cpp#pragma once
+#include <iostream>
+#include <fstream>
 
-#pragma once\
-#include \<iostream\>\
-#include \<fstream\>\
-\
-using namespace std;\
-\
-class Vector {\
-bool \*p;\
-int n;\
-public:\
-Vector() {\
-p = nullptr;\
-n = 0;\
-}\
-\
-Vector(int size) {\
-n = size;\
-if (n \> 0) {\
-p = new bool\[n\];\
-for (int i = 0; i \< n; i++) p\[i\] = false;\
-} else {\
-p = nullptr;\
-n = 0;\
-}\
-}\
-\
-Vector(const bool \*arr, int size) {\
-n = size;\
-if (n \> 0 && arr != nullptr) {\
-p = new bool\[n\];\
-for (int i = 0; i \< n; i++) {\
-p\[i\] = arr\[i\];\
-}\
-} else {\
-p = nullptr;\
-n = 0;\
-}\
-}\
-\
-Vector(const Vector &V) {\
-n = V.n;\
-if (n \> 0) {\
-p = new bool\[n\];\
-for (int i = 0; i \< n; i++) {\
-p\[i\] = V.p\[i\];\
-}\
-} else {\
-p = nullptr;\
-n = 0;\
-}\
-}\
-\
-Vector(Vector &&V) {\
-p = V.p;\
-n = V.n;\
-V.p = nullptr;\
-V.n = 0;\
-}\
-\
-\~Vector() {\
-if (p != nullptr) {\
-delete\[\] p;\
-}\
-}\
-\
-int getSize() const {\
-return n;\
-}\
-\
-bool& operator\[\](int index) {\
-return p\[index\];\
-}\
-\
-Vector& operator=(const Vector &v2) {\
-if (this != &v2) {\
-if (p != nullptr) delete\[\] p;\
-n = v2.n;\
-if (n \> 0) {\
-p = new bool\[n\];\
-for (int i = 0; i \< n; i++) {\
-p\[i\] = v2.p\[i\];\
-}\
-} else {\
-p = nullptr;\
-n = 0;\
-}\
-}\
-return \*this;\
-}\
-\
-Vector& operator=(Vector &&v2) {\
-if (this != &v2) {\
-if (p != nullptr) delete\[\] p;\
-p = v2.p;\
-n = v2.n;\
-v2.p = nullptr;\
-v2.n = 0;\
-}\
-return \*this;\
-}\
-\
-friend Vector operator\^(const Vector &v1, const bool \*arr);\
-friend ostream& operator\<\<(ostream &os, const Vector &v);\
-friend istream& operator\>\>(istream &is, Vector &v);\
-};\
-\
-Vector operator\^(const Vector &v1, const bool \*arr) {\
-Vector result(v1.n);\
-for (int i = 0; i \< v1.n; i++) {\
-result.p\[i\] = v1.p\[i\] \^ arr\[i\];\
-}\
-return result;\
-}\
-\
-ostream& operator\<\<(ostream &os, const Vector &v) {\
-os \<\< v.n \<\< endl;\
-for (int i = 0; i \< v.n; i++) {\
-os \<\< v.p\[i\] \<\< \" \";\
-}\
-return os;\
-}\
-\
-istream& operator\>\>(istream &is, Vector &v) {\
-int size;\
-if (!(is \>\> size)) return is;\
-\
-if (v.p != nullptr) delete\[\] v.p;\
-v.n = size;\
-if (v.n \> 0) {\
-v.p = new bool\[v.n\];\
-for (int i = 0; i \< v.n; i++) {\
-int val;\
-is \>\> val;\
-v.p\[i\] = (val != 0);\
-}\
-} else {\
-v.p = nullptr;\
-v.n = 0;\
-}\
-return is;\
+using namespace std;
+
+class Vector {
+    bool *p;
+    int n;
+public:
+    Vector() {
+        p = nullptr;
+        n = 0;
+    }
+    Vector(int size) {
+        n = size;
+        if (n > 0) {
+            p = new bool[n];
+            for (int i = 0; i < n; i++) p[i] = false;
+        } else {
+            p = nullptr;
+            n = 0;
+        }
+    }
+    Vector(const bool *arr, int size) {
+        n = size;
+        if (n > 0 && arr != nullptr) {
+            p = new bool[n];
+            for (int i = 0; i < n; i++) {
+                p[i] = arr[i];
+            }
+        } else {
+            p = nullptr;
+            n = 0;
+        }
+    }
+    Vector(const Vector &V) {
+        n = V.n;
+        if (n > 0) {
+            p = new bool[n];
+            for (int i = 0; i < n; i++) {
+                p[i] = V.p[i];
+            }
+        } else {
+            p = nullptr;
+            n = 0;
+        }
+    }
+    Vector(Vector &&V) {
+        p = V.p;
+        n = V.n;
+        V.p = nullptr;
+        V.n = 0;
+    }
+    ~Vector() {
+        if (p != nullptr) {
+            delete[] p;
+        }
+    }
+    int getSize() const {
+        return n;
+    }
+    bool& operator[](int index) {
+        return p[index];
+    }
+    Vector& operator=(const Vector &v2) {
+        if (this != &v2) {
+            if (p != nullptr) delete[] p;
+            n = v2.n;
+            if (n > 0) {
+                p = new bool[n];
+                for (int i = 0; i < n; i++) {
+                    p[i] = v2.p[i];
+                }
+            } else {
+                p = nullptr;
+                n = 0;
+            }
+        }
+        return *this;
+    }
+    Vector& operator=(Vector &&v2) {
+        if (this != &v2) {
+            if (p != nullptr) delete[] p;
+            p = v2.p;
+            n = v2.n;
+            v2.p = nullptr;
+            v2.n = 0;
+        }
+        return *this;
+    }
+
+    friend Vector operator^(const Vector &v1, const bool *arr);
+    friend ostream& operator<<(ostream &os, const Vector &v);
+    friend istream& operator>>(istream &is, Vector &v);
+};
+
+Vector operator^(const Vector &v1, const bool *arr) {
+    Vector result(v1.n);
+    for (int i = 0; i < v1.n; i++) {
+        result.p[i] = v1.p[i] ^ arr[i];
+    }
+    return result;
 }
 
+ostream& operator<<(ostream &os, const Vector &v) {
+    os << v.n << endl;
+    for (int i = 0; i < v.n; i++) {
+        os << v.p[i] << " ";
+    }
+    return os;
+}
+
+istream& operator>>(istream &is, Vector &v) {
+    int size;
+    if (!(is >> size)) return is;
+
+    if (v.p != nullptr) delete[] v.p;
+    v.n = size;
+    if (v.n > 0) {
+        v.p = new bool[v.n];
+        for (int i = 0; i < v.n; i++) {
+            int val;
+            is >> val;
+            v.p[i] = (val != 0);
+        }
+    } else {
+        v.p = nullptr;
+        v.n = 0;
+    }
+    return is;
+}
+
+```
 #### Файл main.cpp (Часть 1)
 
-C++
+```cpp
+#include <iostream>
+#include <fstream>
+#include "Vector.h"
 
-#include \<iostream\>\
-#include \<fstream\>\
-#include \"Vector.h\"\
-\
-using namespace std;\
-\
-int main() {\
-ifstream fin(\"input.txt\");\
-if (!fin.is_open()) {\
-return 1;\
-}\
-\
-Vector v1;\
-fin \>\> v1;\
-\
-int size = v1.getSize();\
-bool \*arr = new bool\[size\];\
-\
-for (int i = 0; i \< size; i++) {\
-int temp;\
-fin \>\> temp;\
-arr\[i\] = (temp != 0);\
-}\
-fin.close();\
-\
-Vector v3 = v1 \^ arr;\
-\
-ofstream fout(\"output.txt\");\
-if (!fout.is_open()) {\
-delete\[\] arr;\
-return 1;\
-}\
-\
-fout \<\< \"Result of v1 \^ arr:\\n\";\
-fout \<\< v3;\
-fout.close();\
-\
-delete\[\] arr;\
-\
-return 0;\
+using namespace std;
+
+int main() {
+    ifstream fin("input.txt");
+    if (!fin.is_open()) {
+        return 1;
+    }
+    Vector v1;
+    fin >> v1;
+    int size = v1.getSize();
+    bool *arr = new bool[size];
+    for (int i = 0; i < size; i++) {
+        int temp;
+        fin >> temp;
+        arr[i] = (temp != 0);
+    }
+    fin.close();
+    Vector v3 = v1 ^ arr;
+    ofstream fout("output.txt");
+    if (!fout.is_open()) {
+        delete[] arr;
+        return 1;
+    }
+    fout << "Result of v1 ^ arr:\n";
+    fout << v3;
+    fout.close();
+
+    delete[] arr;
+
+    return 0;
 }
+```
 
 ### 1.4. Контрольный пример и ручной расчет
 
 #### Входные данные (input.txt):
 
 3
-
 1 0 1
-
 0 1 0
 
 Разъяснение данных:
@@ -342,101 +322,99 @@ Result of v1 \^ arr:
 ### 2.3. Исходный код программы
 
 #### Файл Car.h
+```cpp
+#pragma once
+#include <iostream>
+#include <string>
+#include <vector>
 
-#pragma once\
-#include \<iostream\>\
-#include \<string\>\
-#include \<vector\>\
-\
-using namespace std;\
-\
-class Car {\
-protected:\
-string modelName;\
-int maxSpeed;\
-public:\
-//конструктор\
-Car() : modelName(\"Unknown\"), maxSpeed(0) {}\
-Car(string name, int speed) : modelName(name), maxSpeed(speed) {}\
-virtual \~Car() {} //виртуальный деструктор\
-virtual void printf() const { //виртуальная функци\
-cout \<\< \"Model: \" \<\< modelName \<\< \", max speed: \" \<\<
-maxSpeed \<\< \" km/h\";\
-}\
-void printf(bool showh) const {//статический полиморфизм\
-if (showh) {\
-cout \<\< \"\[Car Details\] \";\
-}\
-printf();\
-}\
-};\
-class Truck : public Car {\
-private:\
-double loadCapacity;\
-public:\
-Truck() : Car(), loadCapacity(0.0) {}\
-Truck(string name, int speed, double capacity) : Car(name, speed),
-loadCapacity(capacity) {}\
-//переопределенная функция печати параметров\
-void printf() const override {\
-Car::printf();\
-cout \<\< \", load capacity: \" \<\< loadCapacity \<\< \" tons\";\
-}\
-void printf(string prefix) const {\
-cout \<\< prefix \<\< \" \";\
-printf();\
-}\
+using namespace std;
+
+class Car {
+protected:
+    string modelName;
+    int maxSpeed;
+public:
+    //конструктор
+    Car() : modelName("Unknown"), maxSpeed(0) {}
+    Car(string name, int speed) : modelName(name), maxSpeed(speed) {}
+    virtual ~Car() {} //виртуальный деструктор
+    virtual void printf() const { //виртуальная функци
+        cout << "Model: " << modelName << ", max speed: " << maxSpeed << " km/h";
+    }
+    void printf(bool showh) const {//статический полиморфизм
+        if (showh) {
+            cout << "[Car Details] ";
+        }
+        printf();
+    }
 };
-
+class Truck : public Car {
+private:
+    double loadCapacity;
+public:
+    Truck() : Car(), loadCapacity(0.0) {}
+    Truck(string name, int speed, double capacity) : Car(name, speed), loadCapacity(capacity) {}
+    //переопределенная функция печати параметров
+    void printf() const override {
+        Car::printf();
+        cout << ", load capacity: " << loadCapacity << " tons";
+    }
+    void printf(string prefix) const {
+        cout << prefix << " ";
+        printf();
+    }
+};
+```
 #### Файл mainn.cpp (Часть 2)
+```cpp
+#include <iostream>
+#include <vector>
+#include "Car.h"
 
-#include \<iostream\>\
-#include \<vector\>\
-#include \"Car.h\"\
-\
-using namespace std;\
-\
-int main() {\
-Car regularCar(\"Sedan Toyota\", 200);\
-Truck cargoTruck(\"Kamaz Cargo\", 120, 15.5);\
-cout \<\< \"Car object: \";\
-regularCar.printf();\
-cout \<\< endl;\
-\
-cout \<\< \"Truck object: \";\
-cargoTruck.printf();\
-cout \<\< endl \<\< endl;\
-\
-//статический полиморфизм\
-regularCar.printf(true);\
-cout \<\< endl;\
-cargoTruck.printf(\"\[Truck Info\]\");\
-cout \<\< endl \<\< endl;\
-\
-//динамический полиморфизм\
-Car \*pCar1 = &regularCar;\
-Car \*pCar2 = &cargoTruck;\
-\
-cout \<\< \"Pointer to car (Car): \";\
-pCar1-\>printf();\
-cout \<\< endl;\
-\
-cout \<\< \"Pointer to car (Truck): \";\
-pCar2-\>printf();\
-cout \<\< endl \<\< endl;\
-//создание вектора указателей на объекты разных классов\
-vector\<Car\*\> vehicleVector;\
-vehicleVector.push_back(&regularCar);\
-vehicleVector.push_back(&cargoTruck);\
-for (size_t i = 0; i \< vehicleVector.size(); i++) {\
-cout \<\< \"Vehicle #\" \<\< i + 1 \<\< \": \";\
-vehicleVector\[i\]-\>printf();\
-cout \<\< endl;\
-}\
-\
-return 0;\
+using namespace std;
+
+int main() {
+    Car regularCar("Sedan Toyota", 200);
+    Truck cargoTruck("Kamaz Cargo", 120, 15.5);
+    cout << "Car object: ";
+    regularCar.printf();
+    cout << endl;
+
+    cout << "Truck object: ";
+    cargoTruck.printf();
+    cout << endl << endl;
+
+    //статический полиморфизм
+    regularCar.printf(true);
+    cout << endl;
+    cargoTruck.printf("[Truck Info]");
+    cout << endl << endl;
+
+    //динамический полиморфизм
+    Car *pCar1 = &regularCar;
+    Car *pCar2 = &cargoTruck;
+
+    cout << "Pointer to car (Car): ";
+    pCar1->printf();
+    cout << endl;
+
+    cout << "Pointer to car (Truck): ";
+    pCar2->printf();
+    cout << endl << endl;
+    //создание вектора указателей на объекты разных классов
+    vector<Car*> vehicleVector;
+    vehicleVector.push_back(&regularCar);
+    vehicleVector.push_back(&cargoTruck);
+    for (size_t i = 0; i < vehicleVector.size(); i++) {
+        cout << "Vehicle #" << i + 1 << ": ";
+        vehicleVector[i]->printf();
+        cout << endl;
+    }
+
+    return 0;
 }
-
+```
 ### 2.4. Результаты работы программы
 
 Вывод программы в консоль:
