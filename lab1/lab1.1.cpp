@@ -1,3 +1,4 @@
+/*
 #include <iostream>
 #include <cmath>
 
@@ -45,3 +46,4 @@ void calc(double x, double eps) {
          << "| sin(x) = " << pr
          << "| Iteracia: " << iterations << endl;
 }
+*/
